@@ -1,0 +1,62 @@
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+.factorypath
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.bak
+.temp/
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Ollama models (if stored locally)
+ollama_models/
+
+# Build artifacts (general)
+dist/
+build/
+out/
+
+# Package managers
+.npm/
+.yarn/
+.pnpm-store/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Backup files
+*.backup
+*.old
+
+*.env
