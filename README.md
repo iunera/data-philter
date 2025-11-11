@@ -10,6 +10,11 @@ To get started with data-philter, you'll need to have Docker and Docker Compose 
 
 ## Quick Start
 
+
+
+![Data Philter Installation GIF](dataphilterinstall.gif)
+
+
 ### Automatic Installation
 
 #### macOS / Linux
@@ -23,6 +28,7 @@ curl -sL https://raw.githubusercontent.com/iunera/data-philter/refs/heads/main/i
 ```shell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https.raw.githubusercontent.com/iunera/data-philter/refs/heads/main/install.ps1' | Select-Object -ExpandProperty Content | Invoke-Expression"
 ```
+
 
 ### Manual Installation
 
