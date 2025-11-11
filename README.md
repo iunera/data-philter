@@ -1,6 +1,6 @@
-# data-philter
+# Data Philter
 
-**data-philter** is a locally-run, AI-powered gateway that transforms how you interact with your databases. It empowers you to analyze data using simple, natural language, turning complex data exploration into an intuitive conversation. Stop writing arduous queries and start unlocking insights with ease. It leverages the robust power of the [Apache Druid MCP Server](https://github.com/iunera/druid-mcp-server) to provide a seamless and intelligent interface to your data.
+**Data Philter** is a locally-run, AI-powered gateway that transforms how you interact with your databases. It empowers you to analyze data using simple, natural language, turning complex data exploration into an intuitive conversation. Stop writing arduous queries and start unlocking insights with ease. It leverages the robust power of the [Apache Druid MCP Server](https://github.com/iunera/druid-mcp-server) to provide a seamless and intelligent interface to your data.
 
 With its "Local-First" architecture, data-philter ensures your sensitive data always remains secure within your own infrastructure, giving you full control and peace of mind. Connect to a growing number of databases, starting with Apache Druid, and create a unified, powerful data landscape. The intuitive user interface, powered by the MCP Server, makes data exploration feel as natural as a conversation, yet delivers the deep insights you need. Accelerate your decision-making processes, uncover the hidden potential in your data, and gain a competitive edge.
 
@@ -11,6 +11,7 @@ With its "Local-First" architecture, data-philter ensures your sensitive data al
 - [Features](#features)
 - [Configuration](#configuration)
 - [Usage](#usage)
+- [Uninstall](#uninstall)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [About iunera](#about-iunera)
@@ -18,19 +19,24 @@ With its "Local-First" architecture, data-philter ensures your sensitive data al
 
 ## Prerequisites
 
-Before you begin, ensure you have the following installed on your system:
 
-*   [Docker](https://www.docker.com/get-started)
-*   [Ollama](https://ollama.com) ([Installation Guide](OLLAMA_INSTALLATION.md))
+```sh
+curl -sL https://raw.githubusercontent.com/iunera/data-philter/refs/heads/main/install.sh | sh
+```
 
-## Quick Start
+### Windows 
+```shell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/iunera/data-philter/refs/heads/main/install.ps1' | Select-Object -ExpandProperty Content | Invoke-Expression"
+```
 
+
+### Manual 
 To get started with data-philter, you'll need to have Docker and Docker Compose installed.
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/iunera/data-philter.git
-    cd data-philter
+    git clone https://github.com/iunera/dataphilter.git
+    cd dataphilter
     ```
 2.  **Configure your environment:**
     - Configure the `druid.env` file with the access details for your Druid Cluster.
@@ -67,19 +73,26 @@ Make sure to customize these settings to match your Druid environment.
 
 ## App
 
-The `data-philter` application can be configured using the `app.env` file. One of the key settings is `IUNERA_MODEL_TYPE`, which allows you to choose the AI model you want to use.
+The `data-philter` application can be configured using the `app.env` file. One of the key settings is `IUNERA_MODEL_TYPE`, which allows you to choose the AI model you want to use. It specifies the AI model to be used by the application, based on the Aura model tier system. Each tier is fine-tuned for specific use cases, from complex reasoning to simple pattern-matching.
 
-There are three modes available:
+There are four modes available:
 
-*   **`ollama-s` (Small Model) [DEFAULT]:**
-    *   This mode uses the `smollm3` model with the `smollm-tools4hf:latest` image.
-    *   It is a smaller model that is faster and requires fewer resources, ideal for development and testing. It works on small computers with onboard graphics.
-    *   For more information about Ollama, visit [ollama.com](https://ollama.com).
+*   **`ollama-s` (Small Tier) The Reliable Agent:**
+    *   This mode uses the `iunera/aura-s` model (based on Microsoft Phi-4-mini, 3.8B parameters).
+    *   It is the default agent for simple, clear, single-intent instructions. A good "all-rounder."
+    *   For more details, visit its [Ollama page](https://ollama.com/iunera/aura-s).
 
-*   **`ollama-m` (Medium Model):**
-    *   This mode uses the `iunera/phi4-reasoning-springtools:14b` model.
-    *   It is a more powerful model with advanced reasoning capabilities, recommended for more complex queries and production environments. It works well on GPU-based systems or Macbooks with M-series chips and 8GB of memory.
-    *   You can find more details about this model on its [Ollama page](https://ollama.com/iunera/phi4-reasoning-springtools).
+*   **`ollama-m` (Medium Tier) The Reasoning Workhorse:**
+    *   This mode uses the `iunera/aura-m` model (based on Dolphin Llama 3.1, 8B parameters).
+    *   It is your primary "workhorse" model for complex, multi-step tasks and conversations that require chat history context.
+    *   It requires a GPU-based system or a Macbook with an M-series chip and at least 8GB of memory.
+    *   For more details, visit its [Ollama page](https://ollama.com/iunera/aura-m).
+
+*   **`ollama-l` (Large Model):**
+    *   This mode uses the `iunera/aura-l` model, which is based on the Microsoft phi4-reasoning 14b model.
+    *   It is a more powerful model with advanced reasoning capabilities, recommended for complex queries and production environments.
+    *   It requires a GPU-based system or a Macbook with an M-series chip and at least 8GB of memory.
+    *   For more details, visit its [Ollama page](https://ollama.com/iunera/aura-l).
 
 *   **`openai` (OpenAI Model):**
     *   This mode uses the OpenAI API to access their models.
@@ -90,12 +103,16 @@ When using one of the `ollama` models, you can also configure the `SPRING_AI_OLL
 To change the model, simply edit the `IUNERA_MODEL_TYPE` variable in the `app.env` file:
 
 ```bash
-IUNERA_MODEL_TYPE=ollama-s # or ollama-m or openai
+IUNERA_MODEL_TYPE=ollama-s # or ollama-m, ollama-l, or openai
 ```
 
 ## Usage
 
 Once the services are running, you can start querying your Apache Druid database using natural language through the MCP Server interface.
+
+## Uninstall
+
+For instructions on how to uninstall data-philter and its components, please refer to the [uninstall.md](uninstall.md) guide.
 
 ## Roadmap
 

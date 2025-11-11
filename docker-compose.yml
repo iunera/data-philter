@@ -3,8 +3,6 @@ services:
   # Druid MCP Server
   # This service runs the Druid MCP server, which is the backend that connects to Druid.
   druid-mcp-server:
-#    image: iunera/druid-mcp-server:latest
-    # TODO image wir auf public image setzen
     image: iunera/druid-mcp-server:latest
     pull_policy: always
     env_file:
@@ -12,15 +10,19 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: http
 
+  # Ollama Check
+  # This service checks if Ollama is running before the core service starts.
+  ollama-check:
+    image: curlimages/curl:latest
+    command: ["sh", "-c", "until curl --fail http://host.docker.internal:11434/; do echo 'Waiting for Ollama...'; sleep 5; done"]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
   # Philter Core
   # This is the main application, the "philter-core". It depends on the `druid-mcp-server`.
   core:
-    # TODO change to latest
-    image: iunera/philter-core:dev-0.0.1
+    image: iunera/philter-core:latest
     pull_policy: always
-#    image: backend3
-    ports:
-      - "8080:8080"
     environment:
       SPRING_PROFILES_ACTIVE: docker
     env_file:
@@ -28,23 +30,24 @@ services:
     volumes:
       - philter_data:/data
     depends_on:
-#      - ollama # TODO ollama check service bauen
-      - druid-mcp-server
+      druid-mcp-server:
+        condition: service_started
+      ollama-check:
+        condition: service_completed_successfully
     restart: unless-stopped
 
   # Philter UI
   # This is the frontend application, the "philter-ui". It depends on the `core` service.
   ui:
-    # TODO latest
-    image: iunera/philter-ui:dev-0.0.1
+    image: iunera/philter-ui:latest
     pull_policy: always
-#    image: frontend4-v2
     ports:
       - "3000:3000"
     env_file:
       - app.env
     depends_on:
-      - core
+      core:
+        condition: service_started
     restart: unless-stopped
 
 volumes:
