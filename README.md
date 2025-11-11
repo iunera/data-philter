@@ -1,48 +1,41 @@
 # Data Philter
 
-**Data Philter** is a locally-run, AI-powered gateway that transforms how you interact with your databases. It empowers you to analyze data using simple, natural language, turning complex data exploration into an intuitive conversation. Stop writing arduous queries and start unlocking insights with ease. It leverages the robust power of the [Apache Druid MCP Server](https://github.com/iunera/druid-mcp-server) to provide a seamless and intelligent interface to your data.
+**Data Philter** is a locally run, AI-powered gateway that transforms how you interact with your databases. It empowers you to analyze data using simple, natural language, turning complex data exploration into an intuitive conversation. Stop writing arduous queries and start unlocking insights with ease. It leverages the robust power of the [Apache Druid MCP Server](https://github.com/iunera/druid-mcp-server) to provide a seamless and intelligent interface to your data.
 
 With its "Local-First" architecture, data-philter ensures your sensitive data always remains secure within your own infrastructure, giving you full control and peace of mind. Connect to a growing number of databases, starting with Apache Druid, and create a unified, powerful data landscape. The intuitive user interface, powered by the MCP Server, makes data exploration feel as natural as a conversation, yet delivers the deep insights you need. Accelerate your decision-making processes, uncover the hidden potential in your data, and gain a competitive edge.
 
-## Table of Contents
-
-- [Prerequisites](#prerequisites)
-- [Quick Start](#quick-start)
-- [Features](#features)
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [Uninstall](#uninstall)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
-- [About iunera](#about-iunera)
-- [Contact & Support](#contact--support)
-
 ## Prerequisites
 
+To get started with data-philter, you'll need to have Docker and Docker Compose installed.
+
+## Quick Start
+
+### Automatic Installation
+
+#### macOS / Linux
 
 ```sh
 curl -sL https://raw.githubusercontent.com/iunera/data-philter/refs/heads/main/install.sh | sh
 ```
 
-### Windows 
+#### Windows
+
 ```shell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/iunera/data-philter/refs/heads/main/install.ps1' | Select-Object -ExpandProperty Content | Invoke-Expression"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https.raw.githubusercontent.com/iunera/data-philter/refs/heads/main/install.ps1' | Select-Object -ExpandProperty Content | Invoke-Expression"
 ```
 
-
-### Manual 
-To get started with data-philter, you'll need to have Docker and Docker Compose installed.
+### Manual Installation
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/iunera/dataphilter.git
-    cd dataphilter
+    git clone https://github.com/iunera/datap-hilter.git
+    cd data-philter
     ```
 2.  **Configure your environment:**
     - Configure the `druid.env` file with the access details for your Druid Cluster.
 3.  **Start the services:**
     ```bash
-    docker-compose up -d
+    docker compose up -d
     ```
 4.  **Access the application:**
     - Open your web browser and navigate to http://localhost:3000. No login is required.
