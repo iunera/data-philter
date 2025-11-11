@@ -12,7 +12,7 @@ To get started with data-philter, you'll need to have Docker and Docker Compose 
 
 
 
-![Data Philter Installation GIF](dataphilterinstall.gif)
+![Data Philter Installation GIF](assets/images/dataphilterinstall.gif)
 
 
 ### Automatic Installation
@@ -34,7 +34,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -U
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/iunera/datap-hilter.git
+    git clone https://github.com/iunera/data-philter.git
     cd data-philter
     ```
 2.  **Configure your environment:**

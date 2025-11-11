@@ -62,4 +62,4 @@ out/
 *.env
 
 *.mov
-ffmpeg.txt
+assets/ffmpeg.txt
