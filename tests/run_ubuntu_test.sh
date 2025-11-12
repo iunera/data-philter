@@ -6,12 +6,16 @@
 
 set -e
 
+# Get the directory of this script
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." &> /dev/null && pwd )"
+
 # Make sure install.sh is executable, as it will be mounted into the container
-chmod +x install.sh
+chmod +x "$PROJECT_ROOT/install.sh"
 
 # 1. Build the test Docker image
 echo "Building the test image..."
-docker build -t data-philter-test -f Dockerfile.ubuntu.test .
+docker build -t data-philter-test -f "$SCRIPT_DIR/Dockerfile.ubuntu.test" "$PROJECT_ROOT"
 
 # 2. Define the test command to be executed inside the container
 # This command pre-creates the .env files to avoid interactive prompts during the test.
@@ -19,11 +23,9 @@ TEST_CMD="/bin/bash /home/testuser/install.sh"
 
 # 3. Run the test container
 echo "Running the test container..."
-# Use absolute path for the current directory to mount correctly inside container
-HOST_PWD=$(pwd -P)
 docker run --rm -it \
     -v /var/run/docker.sock:/var/run/docker.sock \
-    -v "$HOST_PWD/install.sh":/home/testuser/install.sh:ro \
+    -v "$PROJECT_ROOT/install.sh":/home/testuser/install.sh:ro \
     -w /home/testuser \
     --name data-philter-test-container \
     data-philter-test \

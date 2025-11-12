@@ -1,12 +1,14 @@
 # Data Philter
 
-**Data Philter** is a locally run, AI-powered gateway that transforms how you interact with your databases. It empowers you to analyze data using simple, natural language, turning complex data exploration into an intuitive conversation. Stop writing arduous queries and start unlocking insights with ease. It leverages the robust power of the [Apache Druid MCP Server](https://github.com/iunera/druid-mcp-server) to provide a seamless and intelligent interface to your data.
+**Data Philter** is designed and developed by the [Apache Druid experts](https://www.iunera.com/apache-druid-ai-consulting-europe/) at [iunera](https://www.iunera.com) to simplify your interaction with Apache Druid. Running completely locally, this AI-powered gateway allows users to choose between Ollama or OpenAI models. It abstracts away the complexity of [Apache Druid](https://druid.apache.org/), making it an ideal tool for data scientists, site reliability engineers, and data engineers. By default, the connection to Apache Druid is established in "readonly mode" via the [Apache Druid MCP Server](https://github.com/iunera/druid-mcp-server), ensuring data safety. Data Philter empowers you to analyze data using simple, natural language, turning complex data exploration into an intuitive conversation. Stop writing arduous queries and start unlocking insights with ease. It leverages the robust power of the [Apache Druid MCP Server](https://github.com/iunera/druid-mcp-server) to provide a seamless and intelligent interface to your data. Future enhancements will include support for additional databases.
+
+**Please note:** Data Philter is currently in an early development stage. While functional, it is actively being improved, and features may evolve rapidly. We welcome feedback and contributions!
 
 With its "Local-First" architecture, data-philter ensures your sensitive data always remains secure within your own infrastructure, giving you full control and peace of mind. Connect to a growing number of databases, starting with Apache Druid, and create a unified, powerful data landscape. The intuitive user interface, powered by the MCP Server, makes data exploration feel as natural as a conversation, yet delivers the deep insights you need. Accelerate your decision-making processes, uncover the hidden potential in your data, and gain a competitive edge.
 
 ## Prerequisites
 
-To get started with data-philter, you'll need to have Docker and Docker Compose installed.
+To get started with data-philter, you'll need to have [Docker](https://www.docker.com) and Docker Compose installed.
 
 ## Quick Start
 
@@ -29,6 +31,7 @@ curl -sL https://raw.githubusercontent.com/iunera/data-philter/refs/heads/main/i
 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/iunera/data-philter/refs/heads/main/install.ps1' | Select-Object -ExpandProperty Content | Invoke-Expression"
 ```
 
+To update Data Philter to a newer version, simply re-run the appropriate installer script (macOS/Linux or Windows).
 
 ### Manual Installation
 
@@ -111,7 +114,7 @@ Once the services are running, you can start querying your Apache Druid database
 
 ## Uninstall
 
-For instructions on how to uninstall data-philter and its components, please refer to the [uninstall.md](uninstall.md) guide.
+For instructions on how to uninstall data-philter and its components, please refer to the [uninstall.md](docs/uninstall.md) guide.
 
 ## Roadmap
 
