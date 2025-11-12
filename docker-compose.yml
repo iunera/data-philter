@@ -14,9 +14,11 @@ services:
   # This service checks if Ollama is running before the core service starts.
   ollama-check:
     image: curlimages/curl:latest
-    command: ["sh", "-c", "until curl --fail http://host.docker.internal:11434/; do echo 'Waiting for Ollama...'; sleep 5; done"]
+    command: ["sh", "-c", "case \"$IUNERA_MODEL_TYPE\" in ollama*) until curl --fail http://host.docker.internal:11434/; do echo 'Waiting for Ollama...'; sleep 5; done ;; *) echo 'Skipping Ollama check for non-Ollama model' ;; esac"]
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    env_file:
+      - app.env
 
   # Philter Core
   # This is the main application, the "philter-core". It depends on the `druid-mcp-server`.
