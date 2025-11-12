@@ -26,7 +26,7 @@ curl -sL https://raw.githubusercontent.com/iunera/data-philter/refs/heads/main/i
 #### Windows
 
 ```shell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https.raw.githubusercontent.com/iunera/data-philter/refs/heads/main/install.ps1' | Select-Object -ExpandProperty Content | Invoke-Expression"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/iunera/data-philter/refs/heads/main/install.ps1' | Select-Object -ExpandProperty Content | Invoke-Expression"
 ```
 
 
