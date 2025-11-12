@@ -49,12 +49,23 @@ To update Data Philter to a newer version, simply re-run the appropriate install
 4.  **Access the application:**
     - Open your web browser and navigate to http://localhost:3000. No login is required.
 
-## Features
+**Note**: Docker Images can be found here:
+* [philter-ui](https://hub.docker.com/r/iunera/philter-ui)
+* [philter-core](https://hub.docker.com/r/iunera/philter-core)
+* [druid-mcp-server](https://hub.docker.com/r/iunera/druid-mcp-server)
 
+
+## Key Features
 *   **Natural Language Querying:** Ask questions in plain English and get results from your database.
-*   **Powered by MCP Server:** Utilizes the robust and extensible [MCP Server](https://github.com/iunera/druid-mcp-server) for AI-driven data interaction.
-*   **Apache Druid Support:** The first supported database is Apache Druid, with more to come.
+*   **Local-First Architecture:** Runs completely locally to keep your data secure.
 *   **Easy Setup:** Get up and running quickly with our Docker-based setup.
+*   **Apache Druid Support:** The first supported database is Apache Druid, with more to come.
+*   **Powered by MCP Server:** Utilizes the robust and extensible [MCP Server](https://github.com/iunera/druid-mcp-server) for AI-driven data interaction.
+*   **Flexible AI Model Support:** Supports local Ollama models (e.g., `iunera/aura-s`, `iunera/aura-m`, `iunera/aura-l`) and OpenAI.
+    *   `iunera/aura-s`: [https://ollama.com/iunera/aura-s](https://ollama.com/iunera/aura-s)
+    *   `iunera/aura-m`: [https://ollama.com/iunera/aura-m](https://ollama.com/iunera/aura-m)
+    *   `iunera/aura-l`: [https://ollama.com/iunera/aura-l](https://ollama.com/iunera/aura-l)
+*   **Safe by Default:** Establishes a "readonly" connection to Apache Druid to prevent accidental data changes.
 
 ## Configuration 
 
