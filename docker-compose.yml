@@ -22,7 +22,7 @@ services:
 
   # Philter Core
   # This is the main application, the "philter-core". It depends on the `druid-mcp-server`.
-  core:
+  philter:
     image: iunera/philter:latest
     pull_policy: always
     environment:
