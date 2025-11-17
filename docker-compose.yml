@@ -23,7 +23,7 @@ services:
   # Philter Core
   # This is the main application, the "philter-core". It depends on the `druid-mcp-server`.
   core:
-    image: iunera/philter-core:latest
+    image: iunera/philter:latest
     pull_policy: always
     environment:
       SPRING_PROFILES_ACTIVE: docker
@@ -31,25 +31,13 @@ services:
       - app.env
     volumes:
       - philter_data:/data
+    ports:
+      - "8080:8080"
     depends_on:
       druid-mcp-server:
         condition: service_started
       ollama-check:
         condition: service_completed_successfully
-    restart: unless-stopped
-
-  # Philter UI
-  # This is the frontend application, the "philter-ui". It depends on the `core` service.
-  ui:
-    image: iunera/philter-ui:latest
-    pull_policy: always
-    ports:
-      - "3000:3000"
-    env_file:
-      - app.env
-    depends_on:
-      core:
-        condition: service_started
     restart: unless-stopped
 
 volumes:
