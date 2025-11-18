@@ -8,11 +8,13 @@ With its "Local-First" architecture, data-philter ensures your sensitive data al
 
 ## Prerequisites
 
-To get started with data-philter, you'll need to have [Docker](https://www.docker.com) and Docker Compose installed.
+To get started with data-philter, you'll need:
+
+- [Docker](https://www.docker.com) and Docker Compose installed.
+- Access to an existing Apache Druid cluster (Router URL and credentials). You will provide these via druid.env in the installer.
+  - If you don't have an existing cluster, you can use our local example cluster. See: [examples/druidcluster/README.md](examples/druidcluster/README.md)
 
 ## Quick Start
-
-
 
 ![Data Philter Installation GIF](assets/images/dataphilterinstall.gif)
 
@@ -47,12 +49,11 @@ To update Data Philter to a newer version, simply re-run the appropriate install
     docker compose up -d
     ```
 4.  **Access the application:**
-    - Open your web browser and navigate to http://localhost:3000. No login is required.
+    - Open your web browser and navigate to http://localhost:4000. No login is required.
 
 **Note**: Docker Images can be found here:
 * [philter](https://hub.docker.com/r/iunera/philter)
 * [druid-mcp-server](https://hub.docker.com/r/iunera/druid-mcp-server)
-
 
 ## Key Features
 *   **Natural Language Querying:** Ask questions in plain English and get results from your database.
@@ -81,7 +82,6 @@ The `druid.env` file contains the settings for connecting the [druid-mcp-server]
 *   `DRUID_MCP_READONLY_ENABLED`: Set to `true` to enable read-only mode, which prevents any changes to your Druid cluster. By default, the server runs in read-only mode to prevent accidental changes to your Druid cluster.
 
 Make sure to customize these settings to match your Druid environment.
-
 
 ## App
 
@@ -121,6 +121,8 @@ IUNERA_MODEL_TYPE=ollama-s # or ollama-m, ollama-l, or openai
 ## Usage
 
 Once the services are running, you can start querying your Apache Druid database using natural language through the MCP Server interface.
+
+If you used the local example cluster, ensure the credentials in druid.env match the example's defaults (admin/password) or your customized values.
 
 ## Uninstall
 
