@@ -402,7 +402,7 @@ for f in app.env druid.env; do
         EXISTING_ENV_FILES="$EXISTING_ENV_FILES $f"
         # Ask user whether to recreate (overwrite) or keep the existing file
         while :; do
-            printf "Found existing %s. Do you want to recreate (overwrite)it? [y/N]: " "$f"
+            printf "Found existing %s. Do you want to recreate (overwrite) it? [y/N]: " "$f"
             # read resp, trim and default to 'n' when empty
             read -r resp < /dev/tty || resp=""
             # trim whitespace
