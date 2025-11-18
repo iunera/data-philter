@@ -464,7 +464,41 @@ if ! $DOCKER_CMD compose version >/dev/null 2>&1; then
 fi
 
 # Step 3.5: Configure AI Model Type
-configure_model_choice
+# If app.env already exists and IUNERA_MODEL_TYPE is set (in env or inside app.env),
+# skip the interactive model configuration step.
+SKIP_MODEL_CONFIG=0
+if [ -f "app.env" ]; then
+    if [ -n "${IUNERA_MODEL_TYPE:-}" ] || grep -q '^IUNERA_MODEL_TYPE=' app.env 2>/dev/null; then
+        info "app.env exists and IUNERA_MODEL_TYPE is set — skipping model configuration."
+        SKIP_MODEL_CONFIG=1
+        # Ensure IUNERA_MODEL_TYPE is exported if it's only present in app.env
+        if [ -z "${IUNERA_MODEL_TYPE:-}" ]; then
+            IUNERA_MODEL_TYPE=$(grep '^IUNERA_MODEL_TYPE=' app.env | sed 's/^IUNERA_MODEL_TYPE=//')
+            export IUNERA_MODEL_TYPE
+        fi
+        # If using an Ollama model, ensure Ollama is installed and running (same behavior as in configure_model_choice)
+        case "$IUNERA_MODEL_TYPE" in
+            ollama-*)
+                if ! command -v ollama >/dev/null 2>&1; then
+                    install_ollama
+                fi
+                if ! ollama ps >/dev/null 2>&1; then
+                    info "Ollama is not running. Attempting to start Ollama server in the background..."
+                    ollama serve >/dev/null 2>&1 &
+                    sleep 5
+                    if ! ollama ps >/dev/null 2>&1; then
+                        die "Failed to start Ollama server. Please check your Ollama installation."
+                    fi
+                    log "Ollama server started successfully in the background."
+                fi
+                ;;
+        esac
+    fi
+fi
+
+if [ "${SKIP_MODEL_CONFIG}" -ne 1 ]; then
+    configure_model_choice
+fi
 
 # Step 4: Configure environment files
 log "🔧 Step 4: Configuring environment files..."
@@ -488,10 +522,46 @@ log "Services started in the background."
 info "You can check the status with '$DOCKER_CMD ps'."
 
 log "✅ Installation complete!"
-info "You can now access the application at http://localhost:3000"
+info "You can now access the application at http://localhost:4000"
 
 open_browser() {
     URL=$1
+
+    # Wait for backend to be ready before opening the browser
+    # Try for up to 120 seconds
+    WAIT_TIMEOUT=120
+    WAIT_INTERVAL=2
+    waited=0
+
+    info "Waiting for backend to become available at $URL (timeout: ${WAIT_TIMEOUT}s)..."
+    while [ $waited -lt $WAIT_TIMEOUT ]; do
+        if command -v curl >/dev/null 2>&1; then
+            if curl -fsS -o /dev/null "$URL/actuator/health" >/dev/null 2>&1; then
+                log "Backend is up!"
+                break
+            fi
+        elif command -v wget >/dev/null 2>&1; then
+            if wget -q --spider "$URL" >/dev/null 2>&1; then
+                log "Backend is up!"
+                break
+            fi
+        else
+            # Neither curl nor wget available; do a simple grace wait once
+            if [ $waited -eq 0 ]; then
+                info "curl/wget not found — waiting 10s before opening the browser..."
+            fi
+            sleep 10 || true
+            waited=$((waited + 10))
+            break
+        fi
+        sleep $WAIT_INTERVAL || true
+        waited=$((waited + WAIT_INTERVAL))
+    done
+
+    if [ $waited -ge $WAIT_TIMEOUT ]; then
+        err "Backend did not become ready within ${WAIT_TIMEOUT}s. You may need to wait a bit longer."
+    fi
+
     OS=$(uname -s)
     case "$OS" in
         Linux)
@@ -512,6 +582,6 @@ open_browser() {
     esac
 }
 
-open_browser "http://localhost:3000"
+open_browser "http://localhost:4000"
 
 INSTALL_OK=1

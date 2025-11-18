@@ -20,8 +20,8 @@ services:
     env_file:
       - app.env
 
-  # Philter Core
-  # This is the main application, the "philter-core". It depends on the `druid-mcp-server`.
+  # Philter
+  # This is the main application, the "philter". It depends on the `druid-mcp-server` and on the `ollama-check` service.
   philter:
     image: iunera/philter:latest
     pull_policy: always
@@ -32,7 +32,7 @@ services:
     volumes:
       - philter_data:/data
     ports:
-      - "8080:8080"
+      - "4000:4000"
     depends_on:
       druid-mcp-server:
         condition: service_started

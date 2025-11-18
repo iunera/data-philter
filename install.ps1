@@ -404,6 +404,38 @@ function Download-DockerCompose {
 }
 #endregion
 
+#region Readiness and Browser Helpers
+function Wait-ForBackend {
+    param (
+        [Parameter(Mandatory=$true)][string]$BaseUrl,
+        [int]$TimeoutSeconds = 120,
+        [int]$IntervalSeconds = 2
+    )
+
+    $healthUrl = "$BaseUrl/actuator/health"
+    $waited = 0
+    Write-Info "Waiting for backend to become available at $BaseUrl (timeout: ${TimeoutSeconds}s)..."
+
+    while ($waited -lt $TimeoutSeconds) {
+        try {
+            # Use Invoke-WebRequest; on connection refused it throws quickly. We don't fail the script.
+            $resp = Invoke-WebRequest -Uri $healthUrl -UseBasicParsing -Method Get -ErrorAction Stop
+            if ($resp -and $resp.StatusCode -ge 200 -and $resp.StatusCode -lt 300) {
+                Write-Log "Backend is up!"
+                return
+            }
+        } catch {
+            # ignore and retry after interval
+        }
+        Start-Sleep -Seconds $IntervalSeconds
+        $waited += $IntervalSeconds
+    }
+
+    # Timed out — warn but continue
+    Write-Host -ForegroundColor Yellow "Backend did not become ready within ${TimeoutSeconds}s. You may need to wait a bit longer."
+}
+#endregion
+
 function Show-Usage {
     Write-Host "Usage: .\install.ps1"
 }
@@ -449,67 +481,100 @@ function Main {
 
     # Step 3.5: Configure AI Model Type
     Write-Log "🔧 Step 3.5: Configuring AI Model Type..."
-    $modelChoice = ""
-    while ($true) {
-        Write-Host "Choose your AI model provider (ollama/openai) [ollama]: " -NoNewline
-        $modelChoice = Read-Host
-        if ([string]::IsNullOrWhiteSpace($modelChoice)) { $modelChoice = "ollama" }
-        $modelChoice = $modelChoice.Trim().ToLower()
 
-        switch ($modelChoice) {
-            "ollama" {
-                # Ask for model size
-                while ($true) {
-                    Write-Host "Choose Ollama model size (small/medium/large) [small]: " -NoNewline
-                    $sizeChoice = Read-Host
-                    if ([string]::IsNullOrWhiteSpace($sizeChoice)) { $sizeChoice = "small" }
-                    $sizeChoice = $sizeChoice.Trim().ToLower()
-                    if ($sizeChoice -eq "small" -or $sizeChoice -eq "s") {
-                        $script:IUNERA_MODEL_TYPE = "ollama-s"
-                        $env:IUNERA_MODEL_TYPE = "ollama-s"
-                        break
-                    } elseif ($sizeChoice -eq "medium" -or $sizeChoice -eq "m") {
-                        $script:IUNERA_MODEL_TYPE = "ollama-m"
-                        $env:IUNERA_MODEL_TYPE = "ollama-m"
-                        break
-                    } elseif ($sizeChoice -eq "large" -or $sizeChoice -eq "l") {
-                        $script:IUNERA_MODEL_TYPE = "ollama-l"
-                        $env:IUNERA_MODEL_TYPE = "ollama-l"
-                        break
-                    } else {
-                        Write-Info "Invalid choice. Please enter 'small', 'medium', or 'large'."
-                    }
+    # If app.env exists and IUNERA_MODEL_TYPE is set (env or inside app.env), skip interactive configuration
+    $skipModelConfig = $false
+    if (Test-Path "app.env") {
+        $hasEnvVar = -not [string]::IsNullOrWhiteSpace($env:IUNERA_MODEL_TYPE)
+        $hasInFile = $false
+        try {
+            $match = Select-String -Path "app.env" -Pattern "^IUNERA_MODEL_TYPE=" -ErrorAction SilentlyContinue | Select-Object -First 1
+            if ($match) { $hasInFile = $true }
+        } catch { }
+
+        if ($hasEnvVar -or $hasInFile) {
+            Write-Info "app.env exists and IUNERA_MODEL_TYPE is set — skipping model configuration."
+            $skipModelConfig = $true
+            if (-not $hasEnvVar) {
+                $line = (Get-Content "app.env" | Where-Object { $_ -match "^IUNERA_MODEL_TYPE=" } | Select-Object -First 1)
+                if ($line) {
+                    $val = $line -replace "^IUNERA_MODEL_TYPE=", ""
+                    $script:IUNERA_MODEL_TYPE = $val
+                    $env:IUNERA_MODEL_TYPE = $val
                 }
-                # For Ollama, remove OpenAI key from template if present
-                Remove-KeyFromTemplate -TemplateFile "app.env_template" -Key "SPRING_AI_OPENAI_API_KEY"
-                break
+            } else {
+                $script:IUNERA_MODEL_TYPE = $env:IUNERA_MODEL_TYPE
             }
-            "openai" {
-                $script:IUNERA_MODEL_TYPE = "openai"
-                $env:IUNERA_MODEL_TYPE = "openai"
-                # Prompt for API key only if not already set
-                if ([string]::IsNullOrEmpty($env:SPRING_AI_OPENAI_API_KEY)) {
-                    Write-Host "Enter your OpenAI API Key (SPRING_AI_OPENAI_API_KEY): " -NoNewline
-                    $enteredKey = Read-Host
-                    $enteredKey = $enteredKey.Trim()
-                    if ([string]::IsNullOrEmpty($enteredKey)) {
-                        # If left empty, remove key from template so we don't prompt later
-                        Remove-KeyFromTemplate -TemplateFile "app.env_template" -Key "SPRING_AI_OPENAI_API_KEY"
-                    } else {
-                        $env:SPRING_AI_OPENAI_API_KEY = $enteredKey
-                    }
-                }
-                break
+
+            if ($script:IUNERA_MODEL_TYPE -like "ollama-*") {
+                Ensure-OllamaServer
             }
-            default {
-                Write-Info "Invalid choice. Please enter 'ollama' or 'openai'."
-            }
-        }
-        if ($script:IUNERA_MODEL_TYPE) { break }
+    }
     }
 
-    if ($script:IUNERA_MODEL_TYPE -like "ollama-*") {
-        Ensure-OllamaServer
+    if (-not $skipModelConfig) {
+        $modelChoice = ""
+        while ($true) {
+            Write-Host "Choose your AI model provider (ollama/openai) [ollama]: " -NoNewline
+            $modelChoice = Read-Host
+            if ([string]::IsNullOrWhiteSpace($modelChoice)) { $modelChoice = "ollama" }
+            $modelChoice = $modelChoice.Trim().ToLower()
+
+            switch ($modelChoice) {
+                "ollama" {
+                    # Ask for model size
+                    while ($true) {
+                        Write-Host "Choose Ollama model size (small/medium/large) [small]: " -NoNewline
+                        $sizeChoice = Read-Host
+                        if ([string]::IsNullOrWhiteSpace($sizeChoice)) { $sizeChoice = "small" }
+                        $sizeChoice = $sizeChoice.Trim().ToLower()
+                        if ($sizeChoice -eq "small" -or $sizeChoice -eq "s") {
+                            $script:IUNERA_MODEL_TYPE = "ollama-s"
+                            $env:IUNERA_MODEL_TYPE = "ollama-s"
+                            break
+                        } elseif ($sizeChoice -eq "medium" -or $sizeChoice -eq "m") {
+                            $script:IUNERA_MODEL_TYPE = "ollama-m"
+                            $env:IUNERA_MODEL_TYPE = "ollama-m"
+                            break
+                        } elseif ($sizeChoice -eq "large" -or $sizeChoice -eq "l") {
+                            $script:IUNERA_MODEL_TYPE = "ollama-l"
+                            $env:IUNERA_MODEL_TYPE = "ollama-l"
+                            break
+                        } else {
+                            Write-Info "Invalid choice. Please enter 'small', 'medium', or 'large'."
+                        }
+                    }
+                    # For Ollama, remove OpenAI key from template if present
+                    Remove-KeyFromTemplate -TemplateFile "app.env_template" -Key "SPRING_AI_OPENAI_API_KEY"
+                    break
+                }
+                "openai" {
+                    $script:IUNERA_MODEL_TYPE = "openai"
+                    $env:IUNERA_MODEL_TYPE = "openai"
+                    # Prompt for API key only if not already set
+                    if ([string]::IsNullOrEmpty($env:SPRING_AI_OPENAI_API_KEY)) {
+                        Write-Host "Enter your OpenAI API Key (SPRING_AI_OPENAI_API_KEY): " -NoNewline
+                        $enteredKey = Read-Host
+                        $enteredKey = $enteredKey.Trim()
+                        if ([string]::IsNullOrEmpty($enteredKey)) {
+                            # If left empty, remove key from template so we don't prompt later
+                            Remove-KeyFromTemplate -TemplateFile "app.env_template" -Key "SPRING_AI_OPENAI_API_KEY"
+                        } else {
+                            $env:SPRING_AI_OPENAI_API_KEY = $enteredKey
+                        }
+                    }
+                    break
+                }
+                default {
+                    Write-Info "Invalid choice. Please enter 'ollama' or 'openai'."
+                }
+            }
+            if ($script:IUNERA_MODEL_TYPE) { break }
+        }
+
+        if ($script:IUNERA_MODEL_TYPE -like "ollama-*") {
+            Ensure-OllamaServer
+        }
     }
 
     # Step 4: Configure environment files
@@ -531,9 +596,15 @@ function Main {
     Write-Info "You can check the status with 'docker ps'."
 
     Write-Log "✅ Installation complete!"
-    Write-Info "You can now access the application at http://localhost:3000"
-    Write-Log "Opening http://localhost:3000 in your default browser..."
-    Start-Process "http://localhost:3000"
+    Write-Info "You can now access the application at http://localhost:4000"
+    # Wait for backend readiness before opening the browser (up to 120s)
+    try {
+        Wait-ForBackend -BaseUrl "http://localhost:4000" -TimeoutSeconds 120 -IntervalSeconds 2
+    } catch {
+        # If readiness check fails (unexpected), continue to attempt opening the browser
+    }
+    Write-Log "Opening http://localhost:4000 in your default browser..."
+    Start-Process "http://localhost:4000"
 
     $script:INSTALL_OK = $true
 }
