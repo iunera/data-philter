@@ -50,8 +50,7 @@ To update Data Philter to a newer version, simply re-run the appropriate install
     - Open your web browser and navigate to http://localhost:3000. No login is required.
 
 **Note**: Docker Images can be found here:
-* [philter-ui](https://hub.docker.com/r/iunera/philter-ui)
-* [philter-core](https://hub.docker.com/r/iunera/philter-core)
+* [philter](https://hub.docker.com/r/iunera/philter)
 * [druid-mcp-server](https://hub.docker.com/r/iunera/druid-mcp-server)
 
 
