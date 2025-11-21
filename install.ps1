@@ -524,15 +524,11 @@ function Main {
                 "ollama" {
                     # Ask for model size
                     while ($true) {
-                        Write-Host "Choose Ollama model size (small/medium/large/xl) [small]: " -NoNewline
+                        Write-Host "Choose Ollama model size (medium/large/xl) [medium]: " -NoNewline
                         $sizeChoice = Read-Host
-                        if ([string]::IsNullOrWhiteSpace($sizeChoice)) { $sizeChoice = "small" }
+                        if ([string]::IsNullOrWhiteSpace($sizeChoice)) { $sizeChoice = "medium" }
                         $sizeChoice = $sizeChoice.Trim().ToLower()
-                        if ($sizeChoice -eq "small" -or $sizeChoice -eq "s") {
-                            $script:IUNERA_MODEL_TYPE = "ollama-s"
-                            $env:IUNERA_MODEL_TYPE = "ollama-s"
-                            break
-                        } elseif ($sizeChoice -eq "medium" -or $sizeChoice -eq "m") {
+                        if ($sizeChoice -eq "medium" -or $sizeChoice -eq "m") {
                             $script:IUNERA_MODEL_TYPE = "ollama-m"
                             $env:IUNERA_MODEL_TYPE = "ollama-m"
                             break
@@ -545,7 +541,7 @@ function Main {
                             $env:IUNERA_MODEL_TYPE = "ollama-xl"
                             break
                         } else {
-                            Write-Info "Invalid choice. Please enter 'small', 'medium', 'large', or 'xl'."
+                            Write-Info "Invalid choice. Please enter 'medium', 'large', or 'xl'."
                         }
                     }
                     # For Ollama, remove OpenAI key from template if present

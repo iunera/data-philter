@@ -192,16 +192,12 @@ configure_model_choice() {
             ollama)
                 # Ask for model size
                 while :; do
-                    printf "Choose Ollama model size (small/medium/large/xl) [small]:"
-                    # read input (fall back to empty on failure), trim/lowercase, then default to 'small' if empty
+                    printf "Choose Ollama model size (medium/large/xl) [medium]:"
+                    # read input (fall back to empty on failure), trim/lowercase, then default to 'medium' if empty
                     read -r SIZE_CHOICE < /dev/tty || SIZE_CHOICE=""
                     SIZE_CHOICE=$(printf "%s" "$SIZE_CHOICE" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | tr '[:upper:]' '[:lower:]')
-                    SIZE_CHOICE=${SIZE_CHOICE:-small}
+                    SIZE_CHOICE=${SIZE_CHOICE:-medium}
                     case "$SIZE_CHOICE" in
-                        small|s)
-                            export IUNERA_MODEL_TYPE="ollama-s"
-                            break
-                            ;;
                         medium|m)
                             export IUNERA_MODEL_TYPE="ollama-m"
                             break
@@ -215,7 +211,7 @@ configure_model_choice() {
                             break
                             ;;
                         *)
-                            err "Invalid choice. Please enter 'small', 'medium', 'large', or 'xl'."
+                            err "Invalid choice. Please enter 'medium', 'large', or 'xl'."
                             ;;
                     esac
                 done
