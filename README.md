@@ -24,13 +24,13 @@ To get started with data-philter, you'll need:
 #### macOS / Linux
 
 ```sh
-curl -sL https://raw.githubusercontent.com/iunera/data-philter/refs/heads/main/install.sh | sh
+curl -sL https://raw.githubusercontent.com/iunera/data-philter/main/install.sh | sh
 ```
 
 #### Windows
 
 ```shell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/iunera/data-philter/refs/heads/main/install.ps1' | Select-Object -ExpandProperty Content | Invoke-Expression"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/iunera/data-philter/main/install.ps1' | Select-Object -ExpandProperty Content | Invoke-Expression"
 ```
 
 To update Data Philter to a newer version, simply re-run the appropriate installer script (macOS/Linux or Windows).
@@ -61,8 +61,7 @@ To update Data Philter to a newer version, simply re-run the appropriate install
 *   **Easy Setup:** Get up and running quickly with our Docker-based setup.
 *   **Apache Druid Support:** The first supported database is Apache Druid, with more to come.
 *   **Powered by MCP Server:** Utilizes the robust and extensible [MCP Server](https://github.com/iunera/druid-mcp-server) for AI-driven data interaction.
-*   **Flexible AI Model Support:** Supports local Ollama models (e.g., `iunera/aura-s`, `iunera/aura-m`, `iunera/aura-l`) and OpenAI.
-    *   `iunera/aura-s`: [https://ollama.com/iunera/aura-s](https://ollama.com/iunera/aura-s)
+*   **Flexible AI Model Support:** Supports local Ollama models (e.g., `iunera/aura-m`, `iunera/aura-l`) and OpenAI.
     *   `iunera/aura-m`: [https://ollama.com/iunera/aura-m](https://ollama.com/iunera/aura-m)
     *   `iunera/aura-l`: [https://ollama.com/iunera/aura-l](https://ollama.com/iunera/aura-l)
 *   **Safe by Default:** Establishes a "readonly" connection to Apache Druid to prevent accidental data changes.
@@ -89,22 +88,20 @@ The `data-philter` application can be configured using the `app.env` file. One o
 
 There are four modes available:
 
-*   **`ollama-s` (Small Tier) The Reliable Agent:**
-    *   This mode uses the `iunera/aura-s` model (based on Microsoft Phi-4-mini, 3.8B parameters).
-    *   It is the default agent for simple, clear, single-intent instructions. A good "all-rounder."
-    *   For more details, visit its [Ollama page](https://ollama.com/iunera/aura-s).
-
 *   **`ollama-m` (Medium Tier) The Reasoning Workhorse:**
-    *   This mode uses the `iunera/aura-m` model (based on Dolphin Llama 3.1, 8B parameters).
+    *   This mode uses the `iunera/aura-m` model (based on `granite:7b-a1b-h`, 7B parameters).
     *   It is your primary "workhorse" model for complex, multi-step tasks and conversations that require chat history context.
     *   It requires a GPU-based system or a Macbook with an M-series chip and at least 8GB of memory.
-    *   For more details, visit its [Ollama page](https://ollama.com/iunera/aura-m).
 
 *   **`ollama-l` (Large Model):**
-    *   This mode uses the `iunera/aura-l` model, which is based on the Microsoft phi4-reasoning 14b model.
+    *   This mode uses the `iunera/aura-l` model, which is based on the `phi4:14b` model.
     *   It is a more powerful model with advanced reasoning capabilities, recommended for complex queries and production environments.
-    *   It requires a GPU-based system or a Macbook with an M-series chip and at least 8GB of memory.
-    *   For more details, visit its [Ollama page](https://ollama.com/iunera/aura-l).
+    *   It requires a GPU-based system or a Macbook with an M-series chip and at least 16GB of memory.
+
+*   **`ollama-xl` (Extra Large Model):**
+    *   Uses the `gpt-oss:20b` model.
+    *   Recommended for heavy workloads and advanced reasoning on capable hardware.
+    *   Recommended on a Macbook with an Apple M‑series chip and at least 64GB of unified memory (or strong GPU setup).
 
 *   **`openai` (OpenAI Model):**
     *   This mode uses the OpenAI API to access their models.
@@ -115,7 +112,7 @@ When using one of the `ollama` models, you can also configure the `SPRING_AI_OLL
 To change the model, simply edit the `IUNERA_MODEL_TYPE` variable in the `app.env` file:
 
 ```bash
-IUNERA_MODEL_TYPE=ollama-s # or ollama-m, ollama-l, or openai
+IUNERA_MODEL_TYPE=ollama-m # or ollama-l, ollama-xl, or openai
 ```
 
 ## Usage
@@ -132,6 +129,9 @@ For instructions on how to uninstall data-philter and its components, please ref
 
 We are actively working on expanding data-philter to support more databases and LLMs. Our current roadmap includes:
 
+
+- **Advanced Exporting UI**: Export your results as markdown.
+- **Canvas Feature**: A canvas for data exploration and visualization.
 - **Clickhouse Integration**: Integration of Clickhouse as a supported database.
 - **Gemini Integration**: Integration of Gemini as a supported LLM.
 - **Claude Integration**: Integration of Claude as a supported LLM.
@@ -140,6 +140,10 @@ We are actively working on expanding data-philter to support more databases and 
 ## Contributing
 
 We welcome contributions! If you would like to contribute, please feel free to create a pull request. Please see our contributing guidelines for more information.
+
+## License
+
+This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
 
 ---
 
