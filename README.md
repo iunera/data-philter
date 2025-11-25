@@ -12,7 +12,7 @@ To get started with data-philter, you'll need:
 
 - [Docker](https://www.docker.com) and Docker Compose installed.
 - Access to an existing Apache Druid cluster (Router URL and credentials). You will provide these via druid.env in the installer.
-  - If you don't have an existing cluster, you can use our local example cluster. See: [examples/druidcluster/README.md](examples/druidcluster/README.md)
+  - If you don't have an existing cluster, you can use the [Development Druid installation](#development-druid-installation).
 
 ## Quick Start
 
@@ -119,7 +119,21 @@ IUNERA_MODEL_TYPE=ollama-m # or ollama-l, ollama-xl, or openai
 
 Once the services are running, you can start querying your Apache Druid database using natural language through the MCP Server interface.
 
-If you used the local example cluster, ensure the credentials in druid.env match the example's defaults (admin/password) or your customized values.
+## Development Druid installation
+For development and testing, a complete local Apache Druid cluster can be installed using the [druid-local-cluster-installer](https://github.com/iunera/druid-local-cluster-installer).
+This setup is designed to work seamlessly with Data Philter.
+
+### Quick Installation (macOS / Linux)
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/iunera/druid-local-cluster-installer/main/install.sh)"
+```
+
+### Quick Installation (Windows)
+```powershell
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/iunera/druid-local-cluster-installer/main/install.ps1'))
+```
+
+The installer will set up a complete Druid cluster and open the Druid console at `http://localhost:8888`. The default credentials are `admin`/`password`.
 
 ## Uninstall
 
