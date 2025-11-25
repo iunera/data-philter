@@ -23,7 +23,7 @@ services:
   # Philter
   # This is the main application, the "philter". It depends on the `druid-mcp-server` and on the `ollama-check` service.
   philter:
-    image: iunera/philter:dev-0.0.2
+    image: iunera/philter:latest
     pull_policy: always
     environment:
       SPRING_PROFILES_ACTIVE: docker
