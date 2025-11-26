@@ -125,12 +125,12 @@ This setup is designed to work seamlessly with Data Philter.
 
 ### Quick Installation (macOS / Linux)
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/iunera/druid-local-cluster-installer/main/install.sh)"
+curl -sL https://raw.githubusercontent.com/iunera/druid-local-cluster-installer/main/install.sh | sh
 ```
 
 ### Quick Installation (Windows)
 ```powershell
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/iunera/druid-local-cluster-installer/main/install.ps1'))
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/iunera/druid-local-cluster-installer/main/install.ps1' | Select-Object -ExpandProperty Content | Invoke-Expression"
 ```
 
 The installer will set up a complete Druid cluster and open the Druid console at `http://localhost:8888`. The default credentials are `admin`/`password`.
