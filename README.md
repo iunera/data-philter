@@ -163,8 +163,6 @@ This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE
 
 ## About iunera
 
-This Druid MCP Server is developed and maintained by **[iunera](https://www.iunera.com)**, a leading provider of advanced AI and data analytics solutions.
-
 iunera specializes in:
 - **AI-Powered Analytics**: Cutting-edge artificial intelligence solutions for data analysis
 - **Enterprise Data Platforms**: Scalable data infrastructure and analytics platforms (Druid, Flink, Kubernetes, Kafka, Spring)
@@ -179,7 +177,8 @@ As veterans in Apache Druid iunera deployed and maintained a large number of sol
 
 **[Get Expert Druid Consulting →](https://www.iunera.com/apache-druid-ai-consulting-europe/)**
 
-### Need Enterprise MCP Server Development Consulting?
+
+### Need Enterprise MCP Server / AI or LLM Development Consulting?
 
 **ENTERPRISE AI INTEGRATION & CUSTOM MCP (MODEL CONTEXT PROTOCOL) SERVER DEVELOPMENT**
 
