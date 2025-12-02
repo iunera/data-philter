@@ -18,6 +18,7 @@ To get started with data-philter, you'll need:
 
 ![Data Philter Installation GIF](assets/images/dataphilterinstall.gif)
 
+[Watch the video introduction on YouTube](https://www.youtube.com/watch?v=tTlgX83NcB0)
 
 ### Automatic Installation
 
